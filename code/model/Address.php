@@ -205,15 +205,16 @@ class Address extends DataObject{
 
 
 	function validate() {
-	    $result = parent::validate();
+		$result = ValidationResult::create();
 
-	    foreach($this->config()->required_fields as $requirement) {
-	        if(empty($this->$requirement)) {
-	            $result->error("Address Model validate function - missing required field: $requirement");
-	        }
-	    }
-	    
-    	return $result;
+		foreach($this->getRequiredFields() as $requirement) {
+			if(empty($this->$requirement)) {
+				$result->error("Address Model validate function - missing required field: $requirement");
+			}
+		}
+
+		$this->extend('validate', $result);
+  	return $result;
 	}
 
 }
